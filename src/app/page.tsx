@@ -28,7 +28,7 @@ export default function ScannerPage() {
   };
 
   return (
-    <div className="flex flex-col items-center max-h-screen p-6 bg-slate-50">
+    <div className="flex flex-col items-center h-screen p-6 bg-slate-50">
       <div className="w-full max-w-md mb-6">
         <label
           htmlFor="device-select"
