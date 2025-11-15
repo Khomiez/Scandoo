@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Scandoo
 
-## Getting Started
+Just a simple scanner app. Built with Next.js and MongoDB for looking up and managing products.
 
-First, run the development server:
+Uses [`@yudiel/react-qr-scanner`](https://github.com/yudiel/react-qr-scanner) to handle the barcode/QR scanning. It's a solid library that supports pretty much every format you'd need - QR codes, Code 128, EAN, PDF417, etc.
+
+## Setup
+
+You'll need:
+- Node.js 16+
+- MongoDB running somewhere (local or MongoDB Atlas)
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create `.env.local`:
+```
+MONGODB_URI=<your-mongo-database-uri>
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Then just run:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How to Use
 
-## Learn More
+- **Scan**: Point your camera at a barcode or QR code and it'll automatically detect it
+- **Manual entry**: Type a code in manually if you don't want to scan
+- **Create products**: Add new products with a code, title, and price
+- **Edit**: Update existing products
 
-To learn more about Next.js, take a look at the following resources:
+## Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Next.js 16 + React 19
+- TypeScript
+- Tailwind CSS
+- MongoDB + Mongoose
+- @yudiel/react-qr-scanner
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+##
 
-## Deploy on Vercel
+Feel free to take this and make it your own. Change the database, the UI, add more features, whatever. It's just a starting point. The scanning part works well thanks to the library, so focus on what makes sense for your use case.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Do whatever you want with it
