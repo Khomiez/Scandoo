@@ -12,15 +12,53 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Finder Overlay Styling */
+/* Target the main finder container - dashed light blue border */
+/* Match div with position:relative, width:70%, and aspect-ratio 1/1 */
+div[style*="position:relative"][style*="width:70%"][style*="aspect-ratio:1 / 1"],
+div[style*="position: relative"][style*="width: 70%"][style*="aspect-ratio: 1 / 1"],
+div[style*="rgba(239, 68, 68, 0.4)"] {
+  border: 5px dashed rgba(239, 255, 13, 0.747) !important; /* Light blue dashed border */
+}
+
+/* Hide all corner divs - target by position absolute, width 15%, and border color */
+div[style*="position:absolute"][style*="width:15%"][style*="height:15%"][style*="#ef4444"],
+div[style*="position: absolute"][style*="width: 15%"][style*="height: 15%"][style*="#ef4444"],
+div[style*="position:absolute"][style*="width:15%"][style*="border:4px solid #ef4444"],
+div[style*="position: absolute"][style*="width: 15%"][style*="border: 4px solid #ef4444"],
+div[style*="position: absolute"][style*="width: 15%"][style*="height: 15%"][style*="border-width: 4px"][style*="rgb(239, 68, 68)"],
+div[style*="position:absolute"][style*="width:15%"][style*="height:15%"][style*="border-width:4px"][style*="rgb(239, 68, 68)"] {
+  display: none !important; /* Hide all corner elements */
+}
+
+/* Override scanner icons to white */
+div[style*="position: absolute"][style*="z-index: 2"] svg,
+div[style*="position: absolute"][style*="cursor: pointer"] svg,
+div[style*="position: absolute"] svg {
+  stroke: white !important;
+  fill: white !important;
+}
+
+/* Target SVGs with stroke attribute */
+svg[style*="stroke"] {
+  stroke: white !important;
+}
+
+/* Target path elements inside scanner SVGs */
+div[style*="position: absolute"] svg path {
+  stroke: white !important;
+  fill: white !important;
 }
