@@ -13,7 +13,10 @@ const connectDB = async () => {
         console.log("mongoDB connected");
     } catch (error) {
         console.error("MongoDB connection error:", error);
-        throw error; 
+        const errorMessage = error instanceof Error 
+            ? `MongoDB connection failed: ${error.message}` 
+            : "MongoDB connection failed: Unknown error";
+        throw new Error(errorMessage);
     }
 };
 

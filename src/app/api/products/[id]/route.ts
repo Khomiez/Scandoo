@@ -21,15 +21,26 @@ export async function GET(_request: Request, { params }: Params) {
     return NextResponse.json(product);
   } catch (error) {
     console.error("Error in GET /api/products/[id]:", error);
+    
+    // Check if it's a MongoDB connection error
+    if (error instanceof Error) {
+      if (error.message.includes("mongo") || error.message.includes("MongoDB") || error.message.includes("MONGO_URI")) {
+        return NextResponse.json({ 
+          error: "Database connection error. Please check your MongoDB configuration." 
+        }, { status: 500 });
+      }
+    }
+    
     const errorMessage = error instanceof Error ? error.message : "Error fetching product";
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
 export async function PUT(request: Request, { params }: Params) {
-  await connectDB();
-  const { id } = await params;
   try {
+    await connectDB();
+    const { id } = await params;
+    
     const body = await request.json();
     const { title, code, price } = body;
 
@@ -45,6 +56,18 @@ export async function PUT(request: Request, { params }: Params) {
 
     return NextResponse.json(product);
   } catch (error) {
-    return NextResponse.json({ error: "Error updating product" }, { status: 500 });
+    console.error("Error in PUT /api/products/[id]:", error);
+    
+    // Check if it's a MongoDB connection error
+    if (error instanceof Error) {
+      if (error.message.includes("mongo") || error.message.includes("MongoDB") || error.message.includes("MONGO_URI")) {
+        return NextResponse.json({ 
+          error: "Database connection error. Please check your MongoDB configuration." 
+        }, { status: 500 });
+      }
+    }
+    
+    const errorMessage = error instanceof Error ? error.message : "Error updating product";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

@@ -15,9 +15,13 @@ const ScannerSection = (props: Props) => {
   const [pause, setPause] = useState(false);
   const [productData, setProductData] = useState<IProduct | null>();
   const [scannedCode, setScannedCode] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const searchProduct = async (data: string, isManualSearch: boolean = false) => {
     setPause(true);
+    setIsLoading(true);
+    setError(null); // Clear previous errors
     try {
       const response = await fetch(`/api/products/${encodeURIComponent(data)}`);
       
@@ -26,6 +30,7 @@ const ScannerSection = (props: Props) => {
         if (response.status === 404) {
           setScannedCode(data);
           setProductData(null);
+          setIsLoading(false);
           if (isManualSearch && props.onManualSearchComplete) {
             props.onManualSearchComplete();
           }
@@ -41,8 +46,15 @@ const ScannerSection = (props: Props) => {
           console.error("Failed to parse error response:", parseError);
         }
         console.error("API Error - Status:", response.status, "Message:", errorMessage);
+        
+        // For 500 errors, show the error message
+        if (response.status === 500) {
+          setError(errorMessage);
+        }
+        
         setScannedCode(data);
         setProductData(null);
+        setIsLoading(false);
         if (isManualSearch && props.onManualSearchComplete) {
           props.onManualSearchComplete();
         }
@@ -59,14 +71,18 @@ const ScannerSection = (props: Props) => {
         setScannedCode('');
       }
       
+      setIsLoading(false);
       if (isManualSearch && props.onManualSearchComplete) {
         props.onManualSearchComplete();
       }
     } catch (error: unknown) {
       console.error("Error scanning product:", error);
+      const errorMessage = error instanceof Error ? error.message : "Network error occurred";
+      setError(errorMessage);
       // On network error, still allow user to add product manually
       setScannedCode(data);
       setProductData(null);
+      setIsLoading(false);
       if (isManualSearch && props.onManualSearchComplete) {
         props.onManualSearchComplete();
       }
@@ -147,7 +163,32 @@ const ScannerSection = (props: Props) => {
           paused={pause}
         /> 
         : // if the scanner is off
-        <Display productData={productData} scannedCode={scannedCode} onProductCreated={handleProductCreated}/>
+        isLoading ? (
+          <div className="w-[400px] h-[400px] bg-slate-200 flex flex-col items-center justify-center p-6 rounded-lg shadow-md">
+            <div className="flex flex-col items-center gap-4">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <p className="text-slate-600 font-medium">Loading product data...</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="w-[400px] h-[400px] bg-slate-200 flex flex-col items-center justify-center p-6 rounded-lg shadow-md">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <p className="text-red-600 font-semibold text-lg">Error</p>
+              <p className="text-slate-700 text-sm">{error}</p>
+              <button
+                onClick={() => {
+                  setError(null);
+                  setPause(false);
+                }}
+                className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition-colors duration-200 active:scale-95"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        ) : (
+          <Display productData={productData} scannedCode={scannedCode} onProductCreated={handleProductCreated}/>
+        )
       }
       <button 
         onClick={() => setPause(!pause)}
